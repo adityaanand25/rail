@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import StatsCard from './components/StatsCard';
 import InnovationCard from './components/InnovationCard';
 import QuickActions from './components/QuickActions';
 import LiveFeed from './components/LiveFeed';
 import PerformanceChart from './components/PerformanceChart';
+import RailwayAIChatbot from './components/RailwayAIChatbot';
+import SideChatbot from './components/SideChatbot';
+import PWAInstall from './components/PWAInstall';
+import PWAFeatures from './components/PWAFeatures';
 import { 
   Users, 
   Train, 
@@ -30,6 +34,10 @@ import HeritageTechnologyFusion from "./components/HeritageTechnologyFusion";
 
 function App() {
   const [activeView, setActiveView] = useState('dashboard');
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [isSideChatbotOpen, setIsSideChatbotOpen] = useState(false);
+  const [isPWAFeaturesOpen, setIsPWAFeaturesOpen] = useState(false);
+  const [isInstallPromptVisible, setIsInstallPromptVisible] = useState(false);
 
   const handleAction = (action: string) => {
     if (action === 'track_train') {
@@ -38,6 +46,25 @@ function App() {
       setActiveView('dashboard');
     }
   };
+
+  useEffect(() => {
+    const handleInstallAvailable = () => setIsInstallPromptVisible(true);
+    const handleInstalled = () => setIsInstallPromptVisible(false);
+
+    window.addEventListener('pwa-install-available', handleInstallAvailable);
+    window.addEventListener('pwa-installed', handleInstalled);
+
+    // Check initial state
+    const pwaManager = (window as any).enhancedPWAManager;
+    if (pwaManager && pwaManager.canInstall() && !pwaManager.isAppInstalled()) {
+      setIsInstallPromptVisible(true);
+    }
+
+    return () => {
+      window.removeEventListener('pwa-install-available', handleInstallAvailable);
+      window.removeEventListener('pwa-installed', handleInstalled);
+    };
+  }, []);
 
   const stats = [
     { title: 'Daily Passengers', value: '23.4M', change: '+12.3%', changeType: 'positive' as const, icon: Users, color: 'bg-blue-500' },
@@ -98,8 +125,8 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
+    <div className={`min-h-screen bg-gray-50 transition-all duration-300 ${isInstallPromptVisible ? 'pt-16' : ''}`}>
+      <Header onPWAFeaturesClick={() => setIsPWAFeaturesOpen(true)} />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeView === 'dashboard' ? (
@@ -177,6 +204,27 @@ function App() {
           </div>
         </footer>
       </main>
+      
+      {/* Railway AI Chatbot */}
+      <RailwayAIChatbot 
+        isOpen={isChatbotOpen} 
+        onToggle={() => setIsChatbotOpen(!isChatbotOpen)} 
+      />
+      
+      {/* Side Chatbot with Gemini AI */}
+      <SideChatbot 
+        isOpen={isSideChatbotOpen} 
+        onToggle={() => setIsSideChatbotOpen(!isSideChatbotOpen)} 
+      />
+      
+      {/* PWA Install and Management */}
+      <PWAInstall />
+      
+      {/* PWA Features Modal */}
+      <PWAFeatures 
+        isOpen={isPWAFeaturesOpen} 
+        onClose={() => setIsPWAFeaturesOpen(false)} 
+      />
     </div>
   );
 }

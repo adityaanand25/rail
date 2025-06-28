@@ -1,7 +1,11 @@
 import React from 'react';
-import { Train, Menu, Bell, User } from 'lucide-react';
+import { Train, Menu, Bell, User, Smartphone } from 'lucide-react';
 
-const Header = () => {
+interface HeaderProps {
+  onPWAFeaturesClick?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onPWAFeaturesClick }) => {
   return (
     <header className="bg-white shadow-md border-b-4 border-orange-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,6 +28,13 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center space-x-4">
+            <button
+              onClick={onPWAFeaturesClick}
+              className="p-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors"
+              title="PWA Features"
+            >
+              <Smartphone className="h-5 w-5 text-purple-600" />
+            </button>
             <Bell className="h-5 w-5 text-gray-600 hover:text-blue-600 cursor-pointer transition-colors" />
             <User className="h-5 w-5 text-gray-600 hover:text-blue-600 cursor-pointer transition-colors" />
             <Menu className="h-5 w-5 text-gray-600 md:hidden cursor-pointer" />

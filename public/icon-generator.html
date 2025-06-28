@@ -1,0 +1,93 @@
+// This is a simple HTML file to generate PWA icons
+// Open this in a browser and use the canvas to generate icons
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PWA Icon Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        .icon-set { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Railway Hub PWA Icons</h1>
+    <p>This generates simple railway-themed icons for the PWA.</p>
+    
+    <div class="icon-set" id="iconContainer"></div>
+    
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const container = document.getElementById('iconContainer');
+        
+        sizes.forEach(size => {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            canvas.style.width = '100px';
+            canvas.style.height = '100px';
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#1e40af';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Train icon (simplified)
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = size * 0.03;
+            
+            // Train body
+            const trainWidth = size * 0.6;
+            const trainHeight = size * 0.3;
+            const x = (size - trainWidth) / 2;
+            const y = (size - trainHeight) / 2;
+            
+            ctx.fillRect(x, y, trainWidth, trainHeight);
+            
+            // Train windows
+            ctx.fillStyle = '#1e40af';
+            const windowSize = size * 0.08;
+            ctx.fillRect(x + size * 0.1, y + size * 0.05, windowSize, windowSize);
+            ctx.fillRect(x + size * 0.25, y + size * 0.05, windowSize, windowSize);
+            ctx.fillRect(x + size * 0.4, y + size * 0.05, windowSize, windowSize);
+            
+            // Wheels
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(x + size * 0.15, y + trainHeight + size * 0.05, size * 0.05, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(x + trainWidth - size * 0.15, y + trainHeight + size * 0.05, size * 0.05, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            container.appendChild(canvas);
+            
+            // Add download link
+            const link = document.createElement('a');
+            link.download = `icon-${size}x${size}.png`;
+            link.href = canvas.toDataURL();
+            link.textContent = `Download ${size}x${size}`;
+            link.style.display = 'block';
+            link.style.textAlign = 'center';
+            link.style.marginTop = '5px';
+            
+            const wrapper = document.createElement('div');
+            wrapper.appendChild(canvas);
+            wrapper.appendChild(link);
+            container.appendChild(wrapper);
+        });
+        
+        // Auto-download all icons
+        setTimeout(() => {
+            const links = document.querySelectorAll('a[download]');
+            links.forEach((link, index) => {
+                setTimeout(() => link.click(), index * 500);
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

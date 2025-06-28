@@ -1,6 +1,10 @@
-import { Smartphone, Wifi, CreditCard, Clock, Star, MessageSquare, Users, Map, ThumbsUp, BatteryCharging, AreaChart, Accessibility, Download } from 'lucide-react';
+import { Smartphone, Wifi, CreditCard, Clock, Star, MessageSquare, Users, Map, ThumbsUp, BatteryCharging, AreaChart, Accessibility, Download, Zap } from 'lucide-react';
+import { useState } from 'react';
+import SmartPassengerExperience from './SmartPassengerExperience';
 
 const PassengerExperience = () => {
+  const [showSmartExperience, setShowSmartExperience] = useState(false);
+
   const features = [
     {
       icon: Smartphone,
@@ -102,6 +106,21 @@ const PassengerExperience = () => {
         <p className="text-gray-600">Enhancing every journey with smart, connected solutions</p>
       </div>
       
+      {/* Smart Experience Button */}
+      <div className="mb-6">
+        <button
+          onClick={() => setShowSmartExperience(true)}
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center space-x-3"
+        >
+          <Zap className="h-6 w-6" />
+          <span className="text-lg">Experience Smart AI Journey Planning</span>
+          <Zap className="h-6 w-6" />
+        </button>
+        <p className="text-center text-sm text-gray-500 mt-2">
+          Unlock personalized AI-powered travel planning with real-time updates
+        </p>
+      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {features.map((feature, index) => (
           <div key={index} className="p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col">
@@ -120,6 +139,11 @@ const PassengerExperience = () => {
           </div>
         ))}
       </div>
+      
+      {/* Smart Passenger Experience Modal */}
+      {showSmartExperience && (
+        <SmartPassengerExperience onClose={() => setShowSmartExperience(false)} />
+      )}
     </div>
   );
 };
